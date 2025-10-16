@@ -1,8 +1,9 @@
 # Tutorial Vite + Code Format
-Tutorial to configure:   
-Vite + Eslint, Prettier, and Organize Imports to format code.  
 
----  
+Tutorial to configure:  
+Vite + Eslint, Prettier, and Organize Imports to format code.
+
+---
 
 ### Instalação e configuração do Vite
 
@@ -45,7 +46,7 @@ export default defineConfig({
 })
 ```
 
----  
+---
 
 ### Limpando o projeto padrão
 
@@ -130,5 +131,101 @@ pnpm dev
 
 ---
 
+### Instalação e configuração do Prettier
 
+1 - Instale o Prettier:
 
+[Prettier Install](https://prettier.io/docs/install)
+
+- Obs: O ESLint já vem por padrão instalado qdo instalamos o Vite.
+
+```sh
+pnpm add --save-dev --save-exact prettier
+```
+
+2 - Crie o arquivo de exclusão **.prettierignore** e adicione:  
+[Ignoring Code](https://prettier.io/docs/ignore)
+
+```ini
+# Dist Folder
+dist
+```
+
+3 - Crie o arquivo de configuração do Prettier, **.prettierrc.json** contendo:  
+[Prettier Options](https://prettier.io/docs/options)
+
+- Minha configuração:  
+  **printWidth=80** - Largura máxima de uma linha (quebra após passar)  
+  **endOfLine="lf"** - Quebra de linha, "lf" padrão unix  
+  **singleQuote=true** - Aspas simples  
+  **jsxSingleQuote=true** - Aspas simples no jsx também  
+  **quoteProps="as-needed"** - Usa aspas nas propriedases, só quando necessário  
+  **semi=false** - Sem ponto e virgula  
+  **useTabs=true** - Usar tabs em vez de espaços para indentação  
+  **tabWidth=4** - Tab equvalente a 4 espaços  
+  **arrowParens="always"** - Sempre usa parenteses nas Arrow Functions
+
+```json
+{
+	"printWidth": 80,
+	"endOfLine": "lf",
+	"singleQuote": true,
+	"jsxSingleQuote": true,
+	"quoteProps": "as-needed",
+	"semi": false,
+	"useTabs": true,
+	"tabWidth": 4,
+	"arrowParens": "always"
+}
+```
+
+- Atenção! Para funcionar deve estar marcado a opção do Prettier no VSCode requireConfig = true
+
+Para habilitar via interface vá na Engrenagem > Settings e busque por **Prettier: Require Config**  
+Marque a caixa de seleção e REINICIE o VSCode.
+
+Para verificar/adicionar no **settings.json**.
+
+```json
+"prettier.requireConfig": true,
+```
+
+É essa linha que é adicionada ao clicar na caixa de seleção.
+
+4 - Para que funcione ao salvar o arquivo ou no autoSave, adicione também no **settings.json**:
+
+```js
+// Verifique se existe:
+"editor.formatOnSave": true
+// Se não funcionar nos	.tsx, tente adicionar
+"[typescriptreact]": {
+    "editor.formatOnSave": true
+},
+```
+
+Reinicie o VSCode.
+
+5 - Caso queira, crie os comandos na sessão de **scripts** do **package.json**:
+
+```json
+"scripts": {
+  "check": "prettier --check \"src/**/*.ts*\"",
+  "format": "prettier --write \"src/**/*.ts*\""
+}
+```
+
+Testando. Vá no **App.tsx** e **main.tsx** e volte aspas duplas e ponto e vírgula.
+
+Verificar:
+
+```sh
+pnpm check
+```
+
+Corrigir:
+
+```sh
+pnpm format
+```
+
+---
