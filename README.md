@@ -281,3 +281,90 @@ import eslintConfigPrettier from 'eslint-config-prettier'
 ```
 
 ---
+
+### Organizando as importações.
+
+- Um excelente plugin para organizar os imports e exports é esse:  
+  [Simple import sort](https://github.com/lydell/eslint-plugin-simple-import-sort)
+
+1 - Instale
+
+```sh
+pnpm add -D eslint-plugin-simple-import-sort
+```
+
+2 - No arquivo de configuração do Eslint, importe e adicione por último o **simpleImportSort**:
+
+```js
+// Importe
+import simpleImportSort from 'eslint-plugin-simple-import-sort'
+
+// entre o files e o extends, adicione
+// files: ['**/*.{ts,tsx}'],
+plugins: {
+    'simple-import-sort': simpleImportSort,
+},
+// extends: [
+// adicione as regras na sessão já existente (rules:)
+'simple-import-sort/imports': 'error',
+/* 'simple-import-sort/exports': 'error', */
+// no caso, não quero que formate o exports, então comentei a regra
+```
+
+3 - Abra o arquivo **main.tsx** e observe que os imports estão com erro, e ao salvar ou rodar lint, ele reorganiza.
+
+```js
+// devem estar assim e marcados com erro,
+// e ter um erro na sessão problems do console
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import { App } from './App.tsx'
+// Após salvar, o erro some e fica assim, separado
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+
+import { App } from './App.tsx'
+```
+
+4 - O arquivo final **eslint.config.js**, ficou assim, caso queira revisar:
+
+```js
+import js from '@eslint/js'
+import globals from 'globals'
+import reactHooks from 'eslint-plugin-react-hooks'
+import reactRefresh from 'eslint-plugin-react-refresh'
+import tseslint from 'typescript-eslint'
+import { defineConfig, globalIgnores } from 'eslint/config'
+import eslintConfigPrettier from 'eslint-config-prettier'
+import simpleImportSort from 'eslint-plugin-simple-import-sort'
+
+export default defineConfig([
+	globalIgnores(['dist']),
+	{
+		files: ['**/*.{ts,tsx}'],
+		plugins: {
+			'simple-import-sort': simpleImportSort,
+		},
+		extends: [
+			js.configs.recommended,
+			tseslint.configs.recommended,
+			reactHooks.configs['recommended-latest'],
+			reactRefresh.configs.vite,
+			{
+				rules: {
+					'prefer-const': 'warn',
+					'no-unused-vars': 'off',
+					'@typescript-eslint/no-unused-vars': 'warn',
+					'simple-import-sort/imports': 'error',
+					/* 'simple-import-sort/exports': 'error', */
+				},
+			},
+			eslintConfigPrettier,
+		],
+		languageOptions: {
+			ecmaVersion: 2020,
+			globals: globals.browser,
+		},
+	},
+])
+```
