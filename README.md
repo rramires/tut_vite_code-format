@@ -229,3 +229,55 @@ pnpm format
 ```
 
 ---
+
+### Garantindo que não vai ter conflito entre o Eslint e o Prettier.
+
+- Aqui que vem a grande sacada para que as duas extensões e pacotes não conflitem e fique um anulando alguma coisa que o outro modificou:  
+  [Integrating with Linters](https://prettier.io/docs/integrating-with-linters)
+
+1 - Vendo a documentação acima, vamos instalar o pacote **eslint-config-prettier**:  
+[Eslint-config-prettier](https://github.com/prettier/eslint-config-prettier)
+
+```sh
+pnpm add -D eslint-config-prettier
+```
+
+2 - No arquivo de configuração do Eslint **eslint.config.js**, importe e adicione por último o eslintConfigPrettier:
+
+```js
+// Importe
+import eslintConfigPrettier from 'eslint-config-prettier'
+
+// Na parte extends
+// extends: [
+      // ...
+      // depois da última linha
+      // reactRefresh.configs.vite,
+      // adicione
+      eslintConfigPrettier,
+// ]
+```
+
+3 - Crie uma área para colocar as exceções às regras:
+
+- Coloquei algumas que costumo usar, mudando alguns erros para apenas alerta.
+- Normalmente no próprio erro, tem um link para documentação da regra, ex:  
+   [no-unused-vars](https://typescript-eslint.io/rules/no-unused-vars/)  
+  Caso não seja necessária, basta ver as opções na documentação e adicionar em **rules**.
+
+```js
+// Depois de
+// reactRefresh.configs.vite,
+// Adicione
+{
+	rules: {
+		'prefer-const': 'warn',
+		'no-unused-vars': 'off',
+		'@typescript-eslint/no-unused-vars': 'warn',
+	},
+},
+// mantendo por último, sempre o
+// eslintConfigPrettier,
+```
+
+---
